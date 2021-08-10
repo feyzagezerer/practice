@@ -17,13 +17,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void onBtnClick (View view){
-        TextView txtHello = findViewById(R.id.txtMessage);
-
-        txtHello.setTextColor(getResources().getColor(R.color.my_purple));
-
+    public void onRegisterBtnClick (View view){
+        TextView textViewName = findViewById(R.id.textViewName);
+        textViewName.setTextColor(getResources().getColor(R.color.my_purple));
         EditText edtTxtName = findViewById(R.id.edtTxtName);
-        txtHello.setText("Hello " + edtTxtName.getText().toString()+"!");
+        textViewName.setText( edtTxtName.getText().toString());
+
+        TextView textViewLastName = findViewById(R.id.textViewLastName);
+        textViewName.setTextColor(getResources().getColor(R.color.my_purple));
+        EditText edtTxtLastName = findViewById(R.id.edtTxtLastName);
+        textViewLastName.setText( edtTxtLastName.getText().toString());
+
+        TextView textViewEmail = findViewById(R.id.textViewEmail);
+        textViewName.setTextColor(getResources().getColor(R.color.my_purple));
+        EditText edtEmail = findViewById(R.id.edtEmail);
+        textViewEmail.setText( edtEmail.getText().toString());
     }
 
 
