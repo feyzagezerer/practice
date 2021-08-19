@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
     val CAMERA_RQ = 102
 
     lateinit var notificationManager: NotificationManager
-    lateinit var  notificationChannel: NotificationChannel
-    lateinit var builder :NotificationCompat.Builder
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: NotificationCompat.Builder
 
     private val channelId = "com.example.myapplication"
     private val descriptor = "Fey notifi"
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         buttonTaps()
     }
 
@@ -71,39 +71,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun notification(){
+    private fun notification() {
         @SuppressLint("RemoteViewLayout")
-        val intent = Intent(this,LauncherActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(this, LauncherActivity::class.java)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val contentView = RemoteViews(packageName,R.layout.notification_layout)
-        contentView.setTextViewText(R.id.tv_title,"FeyyyHey")
-        contentView.setTextViewText(R.id.tv_content,"Text heyyofey")
+        val contentView = RemoteViews(packageName, R.layout.notification_layout)
+        contentView.setTextViewText(R.id.tv_title, "FeyyyHey")
+        contentView.setTextViewText(R.id.tv_content, "Text heyyofey")
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = NotificationChannel(channelId,descriptor,NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel =
+                NotificationChannel(channelId, descriptor, NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
-            notificationChannel.lightColor= Color.GREEN
+            notificationChannel.lightColor = Color.GREEN
             notificationChannel.enableVibration(false)
             notificationManager.createNotificationChannel(notificationChannel)
-            builder = NotificationCompat.Builder(this,channelId)
-             //   .setContentTitle("Noti Title f")
-             //   .setContentText("Noti content f")
+            builder = NotificationCompat.Builder(this, channelId)
+                //   .setContentTitle("Noti Title f")
+                //   .setContentText("Noti content f")
                 .setContent(contentView)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.mipmap.ic_launcher))
                 .setContentIntent(pendingIntent)
-        }else{
+                .setTimeoutAfter(9000)
+        } else {
             builder = NotificationCompat.Builder(this)
-         //   .setContentTitle("Noti Title f")
-           // .setContentText("Noti content f")
-            .setContent(contentView)
-            .setSmallIcon(R.drawable.ic_launcher_round)
-            .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.drawable.ic_launcher))
-            .setContentIntent(pendingIntent)
-
+                //   .setContentTitle("Noti Title f")
+                // .setContentText("Noti content f")
+                .setContent(contentView)
+                .setSmallIcon(R.drawable.ic_launcher_round)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher))
+                .setContentIntent(pendingIntent)
+                .setTimeoutAfter(9000)
         }
-        notificationManager.notify(1234,builder.build())
+        notificationManager.notify(1234, builder.build())
 
     }
 
