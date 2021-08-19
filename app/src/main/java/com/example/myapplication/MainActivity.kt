@@ -1,18 +1,18 @@
 package com.example.myapplication
 
-import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.annotation.SuppressLint
+import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -27,18 +27,21 @@ class MainActivity : AppCompatActivity() {
 
     val FINE_LOCATION_RQ = 101
     val CAMERA_RQ = 102
+
+    lateinit var notificationManager: NotificationManager
+    lateinit var  notificationChannel: NotificationChannel
+    lateinit var builder :NotificationCompat.Builder
+
+    private val channelId = "com.example.myapplication"
+    private val descriptor = "Fey notifi"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-        // Timber.e( "i2n CALISIYO")
-        createNotificationChannel()
-
-
+        notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         buttonTaps()
-
-
     }
 
     private fun buttonTaps() {
@@ -62,11 +65,50 @@ class MainActivity : AppCompatActivity() {
         btnAlertDialog.setOnClickListener {
             alertDialog()
         }
+        val btnNotification = findViewById(R.id.btnNotification) as Button
+        btnNotification.setOnClickListener {
+            notification()
+        }
+    }
+
+    private fun notification(){
+        @SuppressLint("RemoteViewLayout")
+        val intent = Intent(this,LauncherActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val contentView = RemoteViews(packageName,R.layout.notification_layout)
+        contentView.setTextViewText(R.id.tv_title,"FeyyyHey")
+        contentView.setTextViewText(R.id.tv_content,"Text heyyofey")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(channelId,descriptor,NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor= Color.GREEN
+            notificationChannel.enableVibration(false)
+            notificationManager.createNotificationChannel(notificationChannel)
+            builder = NotificationCompat.Builder(this,channelId)
+             //   .setContentTitle("Noti Title f")
+             //   .setContentText("Noti content f")
+                .setContent(contentView)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+        }else{
+            builder = NotificationCompat.Builder(this)
+         //   .setContentTitle("Noti Title f")
+           // .setContentText("Noti content f")
+            .setContent(contentView)
+            .setSmallIcon(R.drawable.ic_launcher_round)
+            .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.drawable.ic_launcher))
+            .setContentIntent(pendingIntent)
+
+        }
+        notificationManager.notify(1234,builder.build())
 
     }
 
     private fun createNotificationChannel() {
-        // Timber.e(       "notification CALISIYO")
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notification Title"
             val descriptionText = "Notification Description"
@@ -92,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendNotification() {
-
+        createNotificationChannel()
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
