@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyApplication</string>
-    <string name="snooze">MyApplication</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="sayyes">You did say yes!</string>
+    <string name="sayno">owwww noooo !!</string>
+    <string name="MoreDetails">More Details</string>
 </resources>
